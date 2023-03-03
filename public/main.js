@@ -122,6 +122,8 @@ document.addEventListener('DOMContentLoaded', () => {
                         method: 'GET',
                     })
                     .catch(err => console.log(err));
+
+                    alert("Playlist Shuffled Successfully\nIt should be playing in your Spotify now!");
                 });
             })
         }
