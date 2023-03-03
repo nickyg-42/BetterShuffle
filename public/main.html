@@ -1,0 +1,65 @@
+<!doctype html>
+<html lang="en" class="no-js">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="x-ua-compatible" content="ie=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Spotify Shuffler</title>
+    <meta name="description" content="Spotify shuffle randomizer">
+    <link rel="stylesheet" href="styles.css">
+    <link rel="icon" href="https://upload.wikimedia.org/wikipedia/commons/thumb/8/84/Spotify_icon.svg/1982px-Spotify_icon.svg.png">
+</head>
+
+<body>
+	<header>
+		<div id="logo"><img src="https://www.freepnglogos.com/uploads/spotify-logo-png/file-spotify-logo-png-4.png" alt="Spotify logo">Spotify Shuffler</div>
+	</header>
+	<section>
+      <h1>Your Playlists &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span><a><button id="logout">Log Out</button></a></span></h1>
+	</section>
+	<section id="pageContent">
+		<main role="main">
+         <div style="display: flex; flex-direction: row;">
+            <h2>First, please select a device: &nbsp;&nbsp;</h2>
+            <select id="devices">
+               <option value="none" selected="true"></option>
+            </select>
+            &nbsp;
+            <button id="apply">Apply</button>
+            &nbsp;
+            <p id="warn" style="display: none; color: maroon; font-weight: bold">Please select a device!</p>
+         </div>
+         <br>
+         <p id="devErr" style="color: black;">Note: If you do not see any devices, ensure Spotify is open on at least one device and refresh this page</p>
+         <br>
+         <article>
+				<div style="display: none" class="playlists" id="ps">
+
+            </div>
+			</article>
+         <article>
+				<h2>How do I use it?</h2>
+            <ul>
+               <li>1. Log in with Spotify</li>
+               <li>2. Select a device</li>
+               <li>3. Click shuffle on the desired playlist</li>
+            </ul>
+            <br>
+            <p>Note: Once a playlist is shuffled you can close this page or visit it again to re-shuffle.</p>
+			</article>
+			<article>
+				<h2>How does it work?</h2>
+				<p style="line-height: 1.5">It gets all the tracks from the playlist you selected and then adds them to your queue in a randomized order.</p>
+			</article>
+         <article>
+				<h2>If it is not working:</h2>
+				<p style="line-height: 1.5">The app has probably exceeded its hourly request limit. Try again in an hour.</p>
+			</article>
+		</main>
+	</section>
+	<footer>
+		<p style="color: white">&copy; Modified HTML Template From <a href="https://html5-templates.com/" target="_blank" rel="nofollow">HTML5 Templates</a></p>
+	</footer>
+   <script src="main.js"></script>
+</body>
+</html>
