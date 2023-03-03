@@ -23,7 +23,7 @@ apply.addEventListener('click', () => {
 })
 
 document.addEventListener('DOMContentLoaded', () => {
-    fetch('http://localhost:8383/devices', {
+    fetch('https://spotifyshuffler.onrender.com/devices', {
         method: 'GET'
     })
     .then((response) => response.json())
@@ -38,7 +38,7 @@ document.addEventListener('DOMContentLoaded', () => {
     })
     .catch(error => alert(error));
 
-    fetch('http://localhost:8383/user', {
+    fetch('https://spotifyshuffler.onrender.com/user', {
         method: 'GET'
     })
     .then((response) => response.json())
@@ -47,7 +47,7 @@ document.addEventListener('DOMContentLoaded', () => {
     })
     .catch(err => alert(err));
 
-    fetch('http://localhost:8383/playlists', {
+    fetch('https://spotifyshuffler.onrender.com/playlists', {
         method: 'GET'
     })
     .then((response) => response.json())
@@ -113,13 +113,13 @@ document.addEventListener('DOMContentLoaded', () => {
 
         for (var k = 0; k < buttons.length; k++) {
             buttons[k].addEventListener('click', (e) => {
-                fetch(`http://localhost:8383/shuffle/${owner}/${e.target.id}/${e.target.name}/${deviceId}`, {
+                fetch(`https://spotifyshuffler.onrender.com/shuffle/${owner}/${e.target.id}/${e.target.name}/${deviceId}`, {
                     method: 'GET'
                 })
                 .then((response) => response.json())
                 .then(data => {
                     console.log('about to fetch: ', data.tempId);
-                    fetch(`http://localhost:8383/delete/${data.tempId}`, {
+                    fetch(`https://spotifyshuffler.onrender.com/delete/${data.tempId}`, {
                         method: 'GET',
                     })
                 });
