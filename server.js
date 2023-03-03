@@ -1,7 +1,7 @@
 const express = require('express');
 const app = express();
 const port = process.env.PORT || 8383;
-const querystring = require('node:querystring');
+const querystring = require('querystring');
 const axios = require("axios");
 if (process.env.NODE_ENV !== 'production') {
   require('dotenv').config();
