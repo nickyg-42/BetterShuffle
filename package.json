@@ -2,6 +2,7 @@
     "name": "better-shuffle",
     "version": "1.0.0",
     "description": "A better shuffling algorithm for Spotify",
+    "repository": "https://github.com/nickyg-42/better-shuffle/tree/main",
     "scripts": {
         "start": "node server.js",
         "dev": "nodemon server.js"
@@ -11,5 +12,6 @@
         "cors": "^2.8.5",
         "dotenv": "^16.0.3",
         "express": "^4.17.1"
-    }
+    },
+    "packageManager": "yarn@3.4.1"
 }
