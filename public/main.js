@@ -23,7 +23,7 @@ apply.addEventListener('click', () => {
 })
 
 document.addEventListener('DOMContentLoaded', () => {
-    fetch('https://spotifyshuffler.onrender.com/devices', {
+    fetch('http://spotifyshufler-env.eba-bdsjpjjn.us-east-1.elasticbeanstalk.com/devices', {
         method: 'GET'
     })
     .then((response) => response.json())
@@ -38,7 +38,7 @@ document.addEventListener('DOMContentLoaded', () => {
     })
     .catch(error => alert(error));
 
-    fetch('https://spotifyshuffler.onrender.com/user', {
+    fetch('http://spotifyshufler-env.eba-bdsjpjjn.us-east-1.elasticbeanstalk.com/user', {
         method: 'GET'
     })
     .then((response) => response.json())
@@ -47,7 +47,7 @@ document.addEventListener('DOMContentLoaded', () => {
     })
     .catch(err => alert(err));
 
-    fetch('https://spotifyshuffler.onrender.com/playlists', {
+    fetch('http://spotifyshufler-env.eba-bdsjpjjn.us-east-1.elasticbeanstalk.com/playlists', {
         method: 'GET'
     })
     .then((response) => response.json())
@@ -113,15 +113,15 @@ document.addEventListener('DOMContentLoaded', () => {
 
         for (var k = 0; k < buttons.length; k++) {
             buttons[k].addEventListener('click', (e) => {
-                fetch(`https://spotifyshuffler.onrender.com/shuffle/${owner}/${e.target.id}/${e.target.name}/${deviceId}`, {
+                fetch(`http://spotifyshufler-env.eba-bdsjpjjn.us-east-1.elasticbeanstalk.com/shuffle/${owner}/${e.target.id}/${e.target.name}/${deviceId}`, {
                     method: 'GET'
                 })
                 .then((response) => response.json())
                 .then(data => {
-                    console.log('about to fetch: ', data.tempId);
-                    fetch(`https://spotifyshuffler.onrender.com/delete/${data.tempId}`, {
+                    fetch(`http://spotifyshufler-env.eba-bdsjpjjn.us-east-1.elasticbeanstalk.com/delete/${data.tempId}`, {
                         method: 'GET',
                     })
+                    .catch(err => console.log(err));
                 });
             })
         }
