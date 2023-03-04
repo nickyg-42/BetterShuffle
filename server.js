@@ -3,7 +3,10 @@ const app = express();
 const port = process.env.PORT || 8383;
 const querystring = require('querystring');
 const axios = require("axios");
-require('dotenv').config();
+
+if (process.env.NODE_ENV !== "production") {
+  require('dotenv').config();
+}
 
 const cors = require('cors');
 
