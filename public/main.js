@@ -5,8 +5,8 @@ const loader = document.getElementById('loader');
 var playlists = [];
 var owner = "";
 var deviceId = "";
-//var serverURL = "http://localhost:8383";
-var serverURL = "http://spotifyshufler-env.eba-bdsjpjjn.us-east-1.elasticbeanstalk.com";
+const production = true;
+var serverURL = production ? "http://spotifyshufler-env.eba-bdsjpjjn.us-east-1.elasticbeanstalk.com" : "http://localhost:8383";
 
 dropdown.addEventListener('change', () => {
     var selection = dropdown.value;

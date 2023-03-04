@@ -3,6 +3,7 @@ const app = express();
 const port = process.env.PORT || 8383;
 const querystring = require('querystring');
 const axios = require("axios");
+var user_access_token = "";
 
 if (process.env.NODE_ENV !== "production") {
   require('dotenv').config();
@@ -21,7 +22,7 @@ app.get('/delete/:playlistToDelete', function(req, res) {
     url: `https://api.spotify.com/v1/playlists/${playlistId}/followers`,
     headers: {
       'content-type': 'application/json',
-      Authorization: process.env.ACCESS_TOKEN,
+      Authorization: user_access_token,
     },
   })
   .catch(error => console.log('Failed to delete temp:', error.code, error.response.status));
@@ -33,7 +34,7 @@ app.get('/devices', function(req, res) {
     url: 'https://api.spotify.com/v1/me/player/devices',
     headers: {
       'content-type': 'application/json',
-      Authorization: process.env.ACCESS_TOKEN,
+      Authorization: user_access_token,
     },
   })
   .then(response => {
@@ -62,7 +63,7 @@ app.get('/shuffle/:userId/:playlistId/:playlistName/:deviceId', function(req, re
     },
     headers: {
       'content-type': 'application/json',
-      Authorization: process.env.ACCESS_TOKEN,
+      Authorization: user_access_token,
     },
   })
   .then(response => {
@@ -76,7 +77,7 @@ app.get('/shuffle/:userId/:playlistId/:playlistName/:deviceId', function(req, re
         url: `https://api.spotify.com/v1/playlists/${plId}/tracks?fields=total,items%28track.id%2C%20track.name%29`,
         headers: {
           'content-type': 'application/json',
-          Authorization: process.env.ACCESS_TOKEN,
+          Authorization: user_access_token,
         },
       })
       .then(response => {
@@ -114,7 +115,7 @@ app.get('/shuffle/:userId/:playlistId/:playlistName/:deviceId', function(req, re
                 url: `https://api.spotify.com/v1/playlists/${plId}/tracks?offset=${offset}&fields=total,items%28track.id%2C%20track.name%29`,
                 headers: {
                   'content-type': 'application/json',
-                  Authorization: process.env.ACCESS_TOKEN,
+                  Authorization: user_access_token,
                 },
               })
               .then(response => {
@@ -151,7 +152,7 @@ app.get('/shuffle/:userId/:playlistId/:playlistName/:deviceId', function(req, re
                   },
                   headers: {
                     'content-type': 'application/json',
-                    Authorization: process.env.ACCESS_TOKEN,
+                    Authorization: user_access_token,
                   },
                 })
                 .catch(error => console.log('Failed to post to temp:', error.code, error.response.status))
@@ -167,7 +168,7 @@ app.get('/shuffle/:userId/:playlistId/:playlistName/:deviceId', function(req, re
                 url: `https://api.spotify.com/v1/me/player/shuffle?state=false&device_id=${deviceId}`,
                 headers: {
                   'content-type': 'application/json',
-                  Authorization: process.env.ACCESS_TOKEN,
+                  Authorization: user_access_token,
                 },
               })
               .catch(error => console.log('Failed to update shuffle state:', error.code, error.response.status))
@@ -181,7 +182,7 @@ app.get('/shuffle/:userId/:playlistId/:playlistName/:deviceId', function(req, re
                   },
                   headers: {
                     'content-type': 'application/json',
-                    Authorization: process.env.ACCESS_TOKEN,
+                    Authorization: user_access_token,
                   },
                 })
                 .catch(error => console.log('Failed to update playback state:', error.code, error.response.status));
@@ -203,7 +204,7 @@ app.get('/playlists', function(req, res) {
     url: 'https://api.spotify.com/v1/me/playlists?limit=50',
     headers: {
       'content-type': 'application/json',
-      Authorization: process.env.ACCESS_TOKEN,
+      Authorization: user_access_token,
     },
   })
   .then(response => {
@@ -220,7 +221,7 @@ app.get('/user', function(req, res) {
     url: 'https://api.spotify.com/v1/me',
     headers: {
       'content-type': 'application/json',
-      Authorization: process.env.ACCESS_TOKEN,
+      Authorization: user_access_token,
     },
   })
   .then(response => {
@@ -252,7 +253,7 @@ app.get('/home', function(req, res) {
   .then(response => {
     if (response.status === 200) {
       const { access_token, token_type } = response.data;
-      process.env['ACCESS_TOKEN'] = token_type + ' ' + access_token;
+      user_access_token = token_type + ' ' + access_token;
       res.redirect("main.html");
     } else {
       res.send(response);
