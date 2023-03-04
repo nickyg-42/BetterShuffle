@@ -112,29 +112,38 @@ document.addEventListener('DOMContentLoaded', () => {
 
         for (var k = 0; k < buttons.length; k++) {
             buttons[k].addEventListener('click', (e) => {
-                if (getDevices()) {
-                    showLoader();
+                //double check user still has device active
+                fetch(`${serverURL}/devices`, {
+                    method: 'GET'
+                })
+                .then((response) => response.json())
+                .then(data => {
+                    if (data.devices.length !== 0) {
+                        // if true continue
+                        showLoader()    
 
-                    fetch(`${serverURL}/shuffle/${owner}/${e.target.id}/${e.target.name}/${deviceId}`, {
-                        method: 'GET'
-                    })
-                    .then((response) => response.json())
-                    .then(data => {
-                        fetch(`${serverURL}/delete/${data.tempId}`, {
-                            method: 'GET',
+                        fetch(`${serverURL}/shuffle/${owner}/${e.target.id}/${e.target.name}/${deviceId}`, {
+                            method: 'GET'
                         })
-                        .catch(err => alert("Failed to delete temp playlist. You will have to manually delete it from your library. Dev details:", err));
-                        
-                        hideLoader();
+                        .then((response) => response.json())
+                        .then(data => {
+                            fetch(`${serverURL}/delete/${data.tempId}`, {
+                                method: 'GET',
+                            })
+                            .catch(err => alert("Failed to delete temp playlist. You will have to manually delete it from your library. Dev details:", err));
 
-                        alert("Playlist Shuffled Successfully\nIt should be playing in your Spotify now!");
-                    })
-                    .catch(err => alert("Failed to shuffle, the server may be down, or the maximum requests may be exceeded for the hour. Dev details:", err));
-                }
-                else {
-                    alert("Error: no device detected.\nPlease open spotify on a device and select it from the drop down menu.\nThe page will now refresh.")
-                    location.reload();
-                }
+                            hideLoader()    
+                            alert("Playlist Shuffled Successfully\nIt should be playing in your Spotify now!");
+                        })
+                        .catch(err => alert("Failed to shuffle, the server may be down, or the maximum requests may be exceeded for the hour. Dev details:", err));
+                    }
+                    else {
+                        // else alert user
+                        alert("Error: no device detected.\nPlease open spotify on a device and select it from the drop down menu.\nThe page will now refresh.")
+                        location.reload();
+                    }
+                })
+                .catch(err => alert('Failed to get devices, the server may be down, or the maximum requests may be exceeded for the hour. Dev details:', err));
             })
         }
     })
@@ -151,18 +160,4 @@ function showLoader() {
 
 function hideLoader() {
     loader.style.display = "none";
-}
-
-function getDevices() {
-    fetch(`${serverURL}/devices`, {
-        method: 'GET'
-    })
-    .then((response) => response.json())
-    .then(data => {
-        if (data.devices.length === 0) {
-            return false;
-        }
-        return true;
-    })
-    .catch(err => alert('Failed to get devices, the server may be down, or the maximum requests may be exceeded for the hour. Dev details:', err));
 }
