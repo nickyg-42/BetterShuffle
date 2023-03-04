@@ -3,9 +3,8 @@ const app = express();
 const port = process.env.PORT || 8383;
 const querystring = require('querystring');
 const axios = require("axios");
-if (process.env.NODE_ENV !== 'production') {
-  require('dotenv').config();
-}
+require('dotenv').config();
+
 const cors = require('cors');
 
 app.use(cors());
@@ -22,7 +21,7 @@ app.get('/delete/:playlistToDelete', function(req, res) {
       Authorization: process.env.ACCESS_TOKEN,
     },
   })
-  .catch(error => alert(error));
+  .catch(error => console.log('Failed to delete temp:', error.code, error.response.status));
 });
 
 app.get('/devices', function(req, res) {
@@ -39,7 +38,7 @@ app.get('/devices', function(req, res) {
       res.send(JSON.stringify(response.data));
     }
   })
-  .catch(err => alert(err));
+  .catch(err => console.log('Failed to get devices:', err.code, err.response.status));
 });
 
 app.get('/shuffle/:userId/:playlistId/:playlistName/:deviceId', function(req, res) {
@@ -152,7 +151,7 @@ app.get('/shuffle/:userId/:playlistId/:playlistName/:deviceId', function(req, re
                     Authorization: process.env.ACCESS_TOKEN,
                   },
                 })
-                .catch(error => alert(error))
+                .catch(error => console.log('Failed to post to temp:', error.code, error.response.status))
               );
 
               tracksBatch = [];
@@ -168,7 +167,7 @@ app.get('/shuffle/:userId/:playlistId/:playlistName/:deviceId', function(req, re
                   Authorization: process.env.ACCESS_TOKEN,
                 },
               })
-              .catch(error => alert(error))
+              .catch(error => console.log('Failed to update shuffle state:', error.code, error.response.status))
               .then(() => {
                 //play temp playlist 
                 axios({
@@ -182,7 +181,7 @@ app.get('/shuffle/:userId/:playlistId/:playlistName/:deviceId', function(req, re
                     Authorization: process.env.ACCESS_TOKEN,
                   },
                 })
-                .catch(error => alert(error));
+                .catch(error => console.log('Failed to update playback state:', error.code, error.response.status));
 
                 //send playlist id back to frontend
                 res.send({tempId: tempPlId});
@@ -209,7 +208,7 @@ app.get('/playlists', function(req, res) {
       res.send(JSON.stringify(response.data));
     }
   })
-  .catch(err => alert(err));
+  .catch(err => console.log('Failed to get playlists:', err.code, err.response.status));
 });
 
 app.get('/user', function(req, res) {
@@ -226,7 +225,7 @@ app.get('/user', function(req, res) {
       res.send(JSON.stringify(response.data));
     }
   })
-  .catch(err => alert(err));
+  .catch(err => console.log('Failed to get user:', err.code, err.response.status));
 });
 
 app.get('/home', function(req, res) {
@@ -247,18 +246,16 @@ app.get('/home', function(req, res) {
       Authorization: `Basic ${new Buffer.from(`${process.env.CLIENT_ID}:${process.env.CLIENT_SECRET}`).toString('base64')}`,
     },
   })
-    .then(response => {
-      if (response.status === 200) {
-        const { access_token, token_type } = response.data;
-
-        process.env['ACCESS_TOKEN'] = token_type + ' ' + access_token;
-
-        res.redirect("main.html");
-      } else {
-        res.send(response);
-      }
-    })
-    .catch(error => alert(error));
+  .then(response => {
+    if (response.status === 200) {
+      const { access_token, token_type } = response.data;
+      process.env['ACCESS_TOKEN'] = token_type + ' ' + access_token;
+      res.redirect("main.html");
+    } else {
+      res.send(response);
+    }
+  })
+  .catch(error => console.log('Failed to post token:', error.code, error.response.status));
 });
 
 app.get('/login', function(req, res) {

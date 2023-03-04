@@ -1,21 +1,20 @@
 const logout = document.getElementById('logout');
 const dropdown = document.getElementById('devices');
-const apply = document.getElementById('apply');
-const warn = document.getElementById('warn');
 const playlistsDiv = document.getElementById('ps');
+const loader = document.getElementById('loader');
 var playlists = [];
 var owner = "";
 var deviceId = "";
+//var serverURL = "http://localhost:8383";
+var serverURL = "http://spotifyshufler-env.eba-bdsjpjjn.us-east-1.elasticbeanstalk.com";
 
-apply.addEventListener('click', () => {
+dropdown.addEventListener('change', () => {
     var selection = dropdown.value;
 
     if (selection === "none") {
-        warn.style.display = "block";
         playlistsDiv.style.display = "none";
     }
     else {
-        warn.style.display = "none";
         playlistsDiv.style.display = "block";
 
         deviceId = selection;
@@ -23,7 +22,7 @@ apply.addEventListener('click', () => {
 })
 
 document.addEventListener('DOMContentLoaded', () => {
-    fetch('http://spotifyshufler-env.eba-bdsjpjjn.us-east-1.elasticbeanstalk.com/devices', {
+    fetch(`${serverURL}/devices`, {
         method: 'GET'
     })
     .then((response) => response.json())
@@ -36,18 +35,18 @@ document.addEventListener('DOMContentLoaded', () => {
             dropdown.append(opt);
         }
     })
-    .catch(error => alert(error));
+    .catch(err => alert("Failed to get devices, the server may be down, or the maximum requests may be exceeded for the hour. Dev details:", err));
 
-    fetch('http://spotifyshufler-env.eba-bdsjpjjn.us-east-1.elasticbeanstalk.com/user', {
+    fetch(`${serverURL}/user`, {
         method: 'GET'
     })
     .then((response) => response.json())
     .then(data => {
         owner = data.id;
     })
-    .catch(err => alert(err));
+    .catch(err => alert("Failed to get user, the server may be down, or the maximum requests may be exceeded for the hour. Dev details:", err));
 
-    fetch('http://spotifyshufler-env.eba-bdsjpjjn.us-east-1.elasticbeanstalk.com/playlists', {
+    fetch(`${serverURL}/playlists`, {
         method: 'GET'
     })
     .then((response) => response.json())
@@ -113,24 +112,57 @@ document.addEventListener('DOMContentLoaded', () => {
 
         for (var k = 0; k < buttons.length; k++) {
             buttons[k].addEventListener('click', (e) => {
-                fetch(`http://spotifyshufler-env.eba-bdsjpjjn.us-east-1.elasticbeanstalk.com/shuffle/${owner}/${e.target.id}/${e.target.name}/${deviceId}`, {
-                    method: 'GET'
-                })
-                .then((response) => response.json())
-                .then(data => {
-                    fetch(`http://spotifyshufler-env.eba-bdsjpjjn.us-east-1.elasticbeanstalk.com/delete/${data.tempId}`, {
-                        method: 'GET',
-                    })
-                    .catch(err => console.log(err));
+                if (getDevices()) {
+                    showLoader();
 
-                    alert("Playlist Shuffled Successfully\nIt should be playing in your Spotify now!");
-                });
+                    fetch(`${serverURL}/shuffle/${owner}/${e.target.id}/${e.target.name}/${deviceId}`, {
+                        method: 'GET'
+                    })
+                    .then((response) => response.json())
+                    .then(data => {
+                        fetch(`${serverURL}/delete/${data.tempId}`, {
+                            method: 'GET',
+                        })
+                        .catch(err => alert("Failed to delete temp playlist. You will have to manually delete it from your library. Dev details:", err));
+                        
+                        hideLoader();
+
+                        alert("Playlist Shuffled Successfully\nIt should be playing in your Spotify now!");
+                    })
+                    .catch(err => alert("Failed to shuffle, the server may be down, or the maximum requests may be exceeded for the hour. Dev details:", err));
+                }
+                else {
+                    alert("Error: no device detected.\nPlease open spotify on a device and select it from the drop down menu.\nThe page will now refresh.")
+                    location.reload();
+                }
             })
         }
     })
-    .catch(err => alert(err));
+    .catch(err => alert("Failed to get playlists, the server may be down, or the maximum requests may be exceeded for the hour. Dev details:", err));
 });
 
 logout.addEventListener('click', () => {
     window.location.href = "index.html";
 });
+
+function showLoader() {
+    loader.style.display = "block";
+}
+
+function hideLoader() {
+    loader.style.display = "none";
+}
+
+function getDevices() {
+    fetch(`${serverURL}/devices`, {
+        method: 'GET'
+    })
+    .then((response) => response.json())
+    .then(data => {
+        if (data.devices.length === 0) {
+            return false;
+        }
+        return true;
+    })
+    .catch(err => alert('Failed to get devices, the server may be down, or the maximum requests may be exceeded for the hour. Dev details:', err));
+}
