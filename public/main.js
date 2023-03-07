@@ -54,7 +54,7 @@ document.addEventListener('DOMContentLoaded', () => {
         for (let i = 0; i < data.items.length; i++) {
             var curr = data.items[i];
 
-            if (curr.owner.id === owner) playlists.push({ 
+            playlists.push({ 
                 trackCount: curr.tracks.total, 
                 image: curr.images[0] ? curr.images[0].url : null,
                 id: curr.id, 
@@ -77,7 +77,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
             playlistDiv.className = "playlist";
 
-            imgDiv.className = "playlist__art"
+            imgDiv.className = "playlist__art";
 
             img.src = x.image;
             img.width = "100";

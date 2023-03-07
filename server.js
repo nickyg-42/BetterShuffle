@@ -14,6 +14,7 @@ const cors = require('cors');
 app.use(cors());
 app.use(express.static('public'));
 
+// delete temp playlist
 app.get('/delete/:playlistToDelete', function(req, res) {
   var playlistId = req.params.playlistToDelete;
 
@@ -28,6 +29,7 @@ app.get('/delete/:playlistToDelete', function(req, res) {
   .catch(error => console.log('Failed to delete temp:', error.code, error.response.status));
 });
 
+// get devices
 app.get('/devices', function(req, res) {
   axios({
     method: 'get',
@@ -45,6 +47,7 @@ app.get('/devices', function(req, res) {
   .catch(err => console.log('Failed to get devices:', err.code, err.response.status));
 });
 
+// shuffle temp playlist
 app.get('/shuffle/:userId/:playlistId/:playlistName/:deviceId', function(req, res) {
   var plId = req.params.playlistId;
   var userId = req.params.userId;
@@ -198,6 +201,7 @@ app.get('/shuffle/:userId/:playlistId/:playlistName/:deviceId', function(req, re
   });
 });
 
+//get users playlists
 app.get('/playlists', function(req, res) {
   axios({
     method: 'get',
@@ -215,6 +219,7 @@ app.get('/playlists', function(req, res) {
   .catch(err => console.log('Failed to get playlists:', err.code, err.response.status));
 });
 
+//get user id
 app.get('/user', function(req, res) {
   axios({
     method: 'get',
@@ -232,6 +237,7 @@ app.get('/user', function(req, res) {
   .catch(err => console.log('Failed to get user:', err.code, err.response.status));
 });
 
+// callback function after OAuth
 app.get('/home', function(req, res) {
   var code = req.query.code || null;
   var state = req.query.state || null;
@@ -262,10 +268,11 @@ app.get('/home', function(req, res) {
   .catch(error => console.log('Failed to post token:', error.code, error.response.status));
 });
 
+//spotify authentification
 app.get('/login', function(req, res) {
 
   var state = generateRandomString(16);
-  var scope = "user-read-private user-read-email user-read-playback-state user-modify-playback-state user-read-currently-playing app-remote-control playlist-read-private playlist-modify-private playlist-modify-public user-read-playback-position user-top-read user-read-recently-played";
+  var scope = "user-read-playback-state user-modify-playback-state playlist-modify-private playlist-modify-public playlist-read-private user-read-private user-read-email";
 
   res.redirect('https://accounts.spotify.com/authorize?' +
     querystring.stringify({
@@ -294,6 +301,7 @@ const generateRandomString = (myLength) => {
   return randomString;
 };
 
+//shuffle playlist
 function shuffle(array) {
   for (let i = array.length - 1; i > 0; i--) {
       const j = Math.floor(Math.random() * (i + 1));
