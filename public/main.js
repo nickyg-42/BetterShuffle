@@ -6,7 +6,7 @@ var playlists = [];
 var owner = "";
 var deviceId = "";
 const production = true;
-var serverURL = production ? "http://spotifyshufler-env.eba-bdsjpjjn.us-east-1.elasticbeanstalk.com" : "http://localhost:8383";
+var serverURL = production ? "http://bettershuffle.us-east-1.elasticbeanstalk.com" : "http://localhost:8383";
 
 dropdown.addEventListener('change', () => {
     var selection = dropdown.value;
